@@ -33,6 +33,18 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/top_picks_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/padding_8"
+                android:background="@drawable/rounded_white_corner_box_bg"
+                android:padding="@dimen/padding_8"
+                android:text="@string/top_picks"
+                android:textAllCaps="true"
+                android:textColor="@android:color/white"
+                android:textSize="13sp" />
+
+            <TextView
                 android:id="@+id/trending_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -40,7 +52,9 @@
                 android:background="@drawable/rounded_white_corner_box_bg"
                 android:padding="@dimen/padding_8"
                 android:text="@string/trending"
-                android:textColor="@android:color/white" />
+                android:textAllCaps="true"
+                android:textColor="@android:color/white"
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/food_tv"
@@ -50,7 +64,9 @@
                 android:background="@drawable/rounded_white_corner_box_bg"
                 android:padding="@dimen/padding_8"
                 android:text="@string/food"
-                android:textColor="@android:color/white" />
+                android:textAllCaps="true"
+                android:textColor="@android:color/white"
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/shops_tv"
@@ -60,7 +76,9 @@
                 android:background="@drawable/rounded_white_corner_box_bg"
                 android:padding="@dimen/padding_8"
                 android:text="@string/shops"
-                android:textColor="@android:color/white" />
+                android:textAllCaps="true"
+                android:textColor="@android:color/white"
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/arts_tv"
@@ -70,7 +88,9 @@
                 android:background="@drawable/rounded_white_corner_box_bg"
                 android:padding="@dimen/padding_8"
                 android:text="@string/arts"
-                android:textColor="@android:color/white" />
+                android:textAllCaps="true"
+                android:textColor="@android:color/white"
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/drinks_tv"
@@ -80,7 +100,9 @@
                 android:background="@drawable/rounded_white_corner_box_bg"
                 android:padding="@dimen/padding_8"
                 android:text="@string/drinks"
-                android:textColor="@android:color/white" />
+                android:textAllCaps="true"
+                android:textColor="@android:color/white"
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/coffee_tv"
@@ -90,7 +112,9 @@
                 android:background="@drawable/rounded_white_corner_box_bg"
                 android:padding="@dimen/padding_8"
                 android:text="@string/coffee"
-                android:textColor="@android:color/white" />
+                android:textAllCaps="true"
+                android:textColor="@android:color/white"
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/outdoors_tv"
@@ -100,7 +124,9 @@
                 android:background="@drawable/rounded_white_corner_box_bg"
                 android:padding="@dimen/padding_8"
                 android:text="@string/outdoors"
-                android:textColor="@android:color/white" />
+                android:textAllCaps="true"
+                android:textColor="@android:color/white"
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/sights_tv"
@@ -110,7 +136,9 @@
                 android:background="@drawable/rounded_white_corner_box_bg"
                 android:padding="@dimen/padding_8"
                 android:text="@string/sights"
-                android:textColor="@android:color/white" />
+                android:textAllCaps="true"
+                android:textColor="@android:color/white"
+                android:textSize="13sp" />
 
         </LinearLayout>
     </HorizontalScrollView>

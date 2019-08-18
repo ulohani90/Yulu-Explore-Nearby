@@ -167,7 +167,7 @@ public class PlacesListActivityPresenter implements PlacesListActivityContract.I
         mPlacesFromDBUseCase.execute(provideVenueListObserver("Top Picks", false));
     }
 
-    private DisposableObserver<List<Venue>> provideVenueListObserver(String query, boolean saveToDB) {
+    private VenueListObserver provideVenueListObserver(String query, boolean saveToDB) {
         VenueListObserver observer = new VenueListObserver(mView, query, saveToDB);
         return observer;
     }

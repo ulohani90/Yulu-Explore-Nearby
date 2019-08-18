@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import in.test.yuluexploreplaces.models.NearbyPlacesResponse;
 import in.test.yuluexploreplaces.models.PlaceModel;
 import in.test.yuluexploreplaces.models.Venue;
+import in.test.yuluexploreplaces.observers.VenueListObserver;
 import in.test.yuluexploreplaces.utils.ApiClass;
 import in.test.yuluexploreplaces.utils.Constants;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -37,7 +38,7 @@ public class ExploreNearbyPlacesUseCase {
     }
 
 
-    public void execute(DisposableObserver<List<Venue>> observer) {
+    public void execute(VenueListObserver observer) {
         disposable = mRetroFit.create(ApiClass.class)
                 .getNearbyPlaces(Constants.CLIENT_ID, Constants.CLIENT_SECRET, section, lat + "," + lng, Constants.getDateInVersionFormat())
                 .subscribeOn(Schedulers.io())
@@ -45,6 +46,7 @@ public class ExploreNearbyPlacesUseCase {
                 .timeout(120, TimeUnit.SECONDS)
                 .cache()
                 .retry()
+
                 .map(nearbyPlacesResponse -> {
                     List<Venue> venues = new ArrayList<>();
                     if (nearbyPlacesResponse != null && nearbyPlacesResponse.getResponse() != null && nearbyPlacesResponse.getResponse().getGroups() != null

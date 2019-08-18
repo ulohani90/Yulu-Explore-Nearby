@@ -25,6 +25,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -121,6 +122,9 @@ public class PlacesListActivity extends AppCompatActivity implements PlacesListA
 
     @BindView(R.id.header_title)
     TextView headerTitle;
+
+    @BindView(R.id.top_picks_tv)
+    TextView topPicks;
 
     @BindView(R.id.food_tv)
     TextView foodTv;
@@ -334,6 +338,7 @@ public class PlacesListActivity extends AppCompatActivity implements PlacesListA
         sightsTv.setOnClickListener(onClickListener);
         outdoorsTv.setOnClickListener(onClickListener);
         drinksTv.setOnClickListener(onClickListener);
+        topPicks.setOnClickListener(onClickListener);
     }
 
     @Override
@@ -552,6 +557,7 @@ public class PlacesListActivity extends AppCompatActivity implements PlacesListA
             options.snippet(venue.getLocation().getDistanceString());
             googleMap.addMarker(options);
         }
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(mPresenter.getUserLat(), mPresenter.getUserLng())));
     }
 
@@ -609,12 +615,15 @@ public class PlacesListActivity extends AppCompatActivity implements PlacesListA
             case R.id.coffee_tv:
                 section = "Coffee";
                 break;
+
             default:
-                section = "Top picks";
+                section = "topPicks";
                 break;
         }
         isExploring = false;
-        currentQuery = section;
-        mPresenter.exploreNearbyPlaces(section);
+        if (!currentQuery.equalsIgnoreCase(section)) {
+            currentQuery = section;
+            mPresenter.exploreNearbyPlaces(section);
+        }
     };
 }
