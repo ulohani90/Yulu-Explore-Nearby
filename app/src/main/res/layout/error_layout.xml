@@ -20,8 +20,11 @@
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_retry_black_24dp"
         android:drawablePadding="@dimen/padding_8"
+        android:fontFamily="sans-serif-medium"
         android:gravity="center_vertical"
         android:text="@string/tap_to_retry"
-        android:textColor="@android:color/black" />
+        android:textAllCaps="true"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
 
 </LinearLayout>

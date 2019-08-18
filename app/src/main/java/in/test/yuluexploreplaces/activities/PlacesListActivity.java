@@ -232,20 +232,22 @@ public class PlacesListActivity extends AppCompatActivity implements PlacesListA
                 }
             }
         });
-        errorRefreshLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isExploring) {
-                    mPresenter.detectLocation(fusedLocationProviderClient, currentQuery);
-                } else {
-                    mPresenter.exploreNearbyPlaces(currentQuery);
-                }
+        errorRefreshLayout.setOnClickListener(v -> {
+            if (isExploring) {
+                mPresenter.exploreNearbyPlaces(currentQuery);
+            } else {
+                mPresenter.searchNearbyPlaces(currentQuery);
             }
         });
         mapView.onCreate(savedInstanceState);
         currentQuery = "topPicks";
         isExploring = true;
-        mPresenter.detectLocation(fusedLocationProviderClient, currentQuery);
+        mPresenter.setFusedLocationProviderClient(fusedLocationProviderClient);
+        if (Constants.isInternetConnected(this)) {
+            mPresenter.exploreNearbyPlaces(currentQuery);
+        } else {
+            mPresenter.loadPlacesFromDB();
+        }
         handleIntent(getIntent());
     }
 
@@ -387,6 +389,7 @@ public class PlacesListActivity extends AppCompatActivity implements PlacesListA
         errorRefreshLayout.setVisibility(View.VISIBLE);
         errorMessageText.setText(errorMessage);
         collapsingToolbarLayout.setVisibility(View.VISIBLE);
+        headerTitle.setText(Constants.getQueryFormatted(currentQuery));
     }
 
     @Override
@@ -405,7 +408,7 @@ public class PlacesListActivity extends AppCompatActivity implements PlacesListA
 
     @Override
     public void setPlacesDataToRecyclerView(List<Venue> venues, String query, boolean saveToDB) {
-
+        placesFromDBUseCase.unsubscribe();
         if (Constants.isInternetConnected(this)) {
             fab.show();
             hideSnackBar();
@@ -432,7 +435,7 @@ public class PlacesListActivity extends AppCompatActivity implements PlacesListA
         snackbar = Snackbar.make(placesRV, message, Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction(retry, v -> {
             if (isExploring) {
-                mPresenter.detectLocation(fusedLocationProviderClient, currentQuery);
+                mPresenter.exploreNearbyPlaces(currentQuery);
             } else {
                 mPresenter.searchNearbyPlaces(currentQuery);
             }
@@ -455,7 +458,11 @@ public class PlacesListActivity extends AppCompatActivity implements PlacesListA
                 if (grantResults.length > 0) {
                     isLocationCheckedCount = 1;
                     if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        mPresenter.detectLocation(fusedLocationProviderClient, currentQuery);
+                        if (isExploring) {
+                            mPresenter.exploreNearbyPlaces(currentQuery);
+                        } else {
+                            mPresenter.searchNearbyPlaces(currentQuery);
+                        }
                     } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                         showGiveLocationPermissionDialog();
                     }
@@ -469,7 +476,10 @@ public class PlacesListActivity extends AppCompatActivity implements PlacesListA
                 .setPositiveButton(addPermission, (dialog, which) -> moveToAppPermissionScreen())
                 .setNegativeButton(retry, (dialog, which) -> {
                     isLocationCheckedCount = 0;
-                    mPresenter.detectLocation(fusedLocationProviderClient, currentQuery);
+                    if (isExploring)
+                        mPresenter.exploreNearbyPlaces(currentQuery);
+                    else
+                        mPresenter.searchNearbyPlaces(currentQuery);
                 })
                 .show();
     }

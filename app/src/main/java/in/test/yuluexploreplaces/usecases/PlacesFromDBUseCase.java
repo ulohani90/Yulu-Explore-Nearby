@@ -15,13 +15,13 @@ public class PlacesFromDBUseCase {
 
     Context mContext;
 
-    DisposableObserver<List<Venue>> disposable;
+    VenueListObserver disposable;
 
     public PlacesFromDBUseCase(Context context) {
         this.mContext = context;
     }
 
-    public void execute(DisposableObserver<List<Venue>> venueListObserver) {
+    public void execute(VenueListObserver venueListObserver) {
         disposable = VenuesDatabase.getInstance(mContext).venuesDaoObject().getAll()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

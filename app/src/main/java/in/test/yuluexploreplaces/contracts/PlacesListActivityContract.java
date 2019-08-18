@@ -19,9 +19,9 @@ public class PlacesListActivityContract {
 
         void setUpLayout();
 
-        void detectLocation(FusedLocationProviderClient fusedLocationProviderClient, String section);
+        void detectLocation(String section, boolean isExplore);
 
-        void detectLocationSuccess(Location location, String section);
+        void detectLocationSuccess(Location location, String section, boolean isExplore);
 
         void setNearbyPlacesUseCase(ExploreNearbyPlacesUseCase nearbyPlacesUseCase);
 
@@ -73,6 +73,7 @@ public class PlacesListActivityContract {
         void showSnackbar(String message);
 
         void hideSnackBar();
+
 
     }
 

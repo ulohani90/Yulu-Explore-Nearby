@@ -67,33 +67,34 @@ public class PlacesListActivityPresenter implements PlacesListActivityContract.I
         }
     }
 
+    public void setFusedLocationProviderClient(FusedLocationProviderClient fusedLocationProviderClient) {
+        this.mFusedLocationProviderClient = fusedLocationProviderClient;
+    }
+
     @Override
-    public void detectLocation(FusedLocationProviderClient fusedLocationProviderClient, String section) {
-        if (!Constants.isInternetConnected(mContext)) {
-            loadPlacesFromDB();
+    public void detectLocation(String section, boolean isExplore) {
+
+        if (checkLocationPermission()) {
+            mView.requestLocationPermission();
         } else {
-            this.mFusedLocationProviderClient = fusedLocationProviderClient;
-            if (checkLocationPermission()) {
-                mView.requestLocationPermission();
-            } else {
-                mView.showLoading();
-                mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
-                    if (location != null) {
-                        if (!isLocationEnabled()) {
-                            mView.showEnableLocationDialog();
-                        }
-                        detectLocationSuccess(location, section);
-                    } else {
-                        if (isLocationEnabled())
-                            startLocationUpdate(section);
-                        else {
-                            mView.setErrorView("Location could not be found. Please enable location settings and retry");
-                            mView.showEnableLocationDialog();
-                        }
+            mView.showLoading();
+            mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(location -> {
+                if (location != null) {
+                    if (!isLocationEnabled()) {
+                        mView.showEnableLocationDialog();
                     }
-                });
-            }
+                    detectLocationSuccess(location, section, isExplore);
+                } else {
+                    if (isLocationEnabled())
+                        startLocationUpdate(section, isExplore);
+                    else {
+                        mView.setErrorView("Location could not be found. Please enable location settings and retry");
+                        mView.showEnableLocationDialog();
+                    }
+                }
+            });
         }
+
     }
 
     public boolean isLocationEnabled() {
@@ -128,13 +129,17 @@ public class PlacesListActivityPresenter implements PlacesListActivityContract.I
     }
 
     @Override
-    public void detectLocationSuccess(Location location, String section) {
+    public void detectLocationSuccess(Location location, String section, boolean isExplore) {
         if (locationCallback != null && mFusedLocationProviderClient != null) {
             mFusedLocationProviderClient.removeLocationUpdates(locationCallback);
         }
         userLat = location.getLatitude();
         userLng = location.getLongitude();
-        exploreNearbyPlaces(section);
+        if (isExplore) {
+            exploreNearbyPlaces(section);
+        } else {
+            searchNearbyPlaces(section);
+        }
     }
 
     @Override
@@ -143,9 +148,13 @@ public class PlacesListActivityPresenter implements PlacesListActivityContract.I
             mView.showSnackbar("No Internet Connection");
             mView.setErrorView("No network available. Connect to internet and try again.");
         } else {
-            mView.showLoading();
-            mNearbyPlacesUseCase.setData(section, userLat, userLng);
-            mNearbyPlacesUseCase.execute(provideVenueListObserver(section, true));
+            if (userLat == 0 && userLng == 0) {
+                detectLocation(section, true);
+            } else {
+                mView.showLoading();
+                mNearbyPlacesUseCase.setData(section, userLat, userLng);
+                mNearbyPlacesUseCase.execute(provideVenueListObserver(section, true));
+            }
         }
     }
 
@@ -155,9 +164,13 @@ public class PlacesListActivityPresenter implements PlacesListActivityContract.I
             mView.showSnackbar("No Internet Connection");
             mView.setErrorView("No network available. Connect to internet and try again.");
         } else {
-            mView.showLoading();
-            mSearchNearbyPlacesUseCase.setData(query, userLat, userLng);
-            mSearchNearbyPlacesUseCase.execute(provideVenueListObserver(query, true));
+            if (userLat == 0 && userLng == 0) {
+                detectLocation(query, false);
+            } else {
+                mView.showLoading();
+                mSearchNearbyPlacesUseCase.setData(query, userLat, userLng);
+                mSearchNearbyPlacesUseCase.execute(provideVenueListObserver(query, true));
+            }
         }
     }
 
@@ -173,7 +186,7 @@ public class PlacesListActivityPresenter implements PlacesListActivityContract.I
     }
 
 
-    private void startLocationUpdate(String query) {
+    private void startLocationUpdate(String query, boolean isExplore) {
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
@@ -188,9 +201,10 @@ public class PlacesListActivityPresenter implements PlacesListActivityContract.I
                     }
                     for (Location location : locationResult.getLocations()) {
                         if (location != null) {
-                            detectLocationSuccess(location, query);
+                            detectLocationSuccess(location, query, isExplore);
                         }
                     }
+
                 }
             };
             mFusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
