@@ -583,6 +583,8 @@ public class PlacesListActivity extends AppCompatActivity implements PlacesListA
         mapView.onDestroy();
         nearbyPlacesUseCase.unsubscribe();
         searchNearbyPlacesUseCase.unsubscribe();
+        placesFromDBUseCase.unsubscribe();
+        insertPlacesInDBUseCase.unsubscribe();
         super.onDestroy();
     }
 
