@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:layout_margin="8dp"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="8dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:padding="@dimen/fab_margin">
+
+        <TextView
+            android:id="@+id/hotel_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="4.3KM"
+            android:textColor="@color/colorPrimary" />
+
+        <TextView
+            android:id="@+id/hotel_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_toLeftOf="@id/hotel_distance"
+            android:textStyle="bold"
+            android:text="House of Commons"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/hotel_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/hotel_name"
+            android:text="43rd Avenue" />
+
+
+        <TextView
+            android:id="@+id/categories_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/hotel_address"
+            android:layout_marginTop="4dp"
+            android:text="Dummy"
+            android:textColor="@color/category_text_green_color" />
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
